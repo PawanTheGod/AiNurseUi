@@ -1,4 +1,4 @@
-import { Bell, Moon, Sun } from "lucide-react";
+import { Bell, Moon, Sun, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { SidebarTrigger } from "@/components/ui/sidebar";
@@ -12,9 +12,40 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 import { useTheme } from "@/hooks/useTheme";
+import { useAuth } from "@/contexts/AuthContext";
+import { signOut } from "firebase/auth";
+import { auth } from "@/lib/firebase";
+import { useToast } from "@/hooks/use-toast";
+import { useNavigate } from "react-router-dom";
 
 export function AppHeader() {
   const { theme, setTheme } = useTheme();
+  const { user } = useAuth();
+  const { toast } = useToast();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      toast({
+        title: "Logged Out",
+        description: "You have been successfully logged out.",
+      });
+      navigate("/login");
+    } catch (error: any) {
+      console.error("Logout error:", error);
+      toast({
+        variant: "destructive",
+        title: "Logout Failed",
+        description: error.message,
+      });
+    }
+  };
+
+  // Get user initials for avatar
+  const userInitials = user?.email?.slice(0, 2).toUpperCase() || "DS";
+  const userDisplayName = user?.email?.split("@")[0] || "Doctor";
+
 
   return (
     <header className="sticky top-0 z-50 flex h-16 items-center justify-between border-b bg-background/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -63,13 +94,13 @@ export function AppHeader() {
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="relative h-9 gap-2 px-2">
               <Avatar className="h-8 w-8">
-                <AvatarImage src="" alt="Dr. Smith" />
+                <AvatarImage src="" alt={userDisplayName} />
                 <AvatarFallback className="bg-primary text-primary-foreground text-sm">
-                  DS
+                  {userInitials}
                 </AvatarFallback>
               </Avatar>
-              <span className="hidden text-sm font-medium md:inline-block">
-                Dr. Smith
+              <span className="hidden text-sm font-medium md:inline-block capitalize">
+                {userDisplayName}
               </span>
             </Button>
           </DropdownMenuTrigger>
@@ -79,7 +110,8 @@ export function AppHeader() {
             <DropdownMenuItem>Profile</DropdownMenuItem>
             <DropdownMenuItem>Settings</DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="text-destructive">
+            <DropdownMenuItem onClick={handleLogout} className="text-destructive">
+              <LogOut className="mr-2 h-4 w-4" />
               Log out
             </DropdownMenuItem>
           </DropdownMenuContent>

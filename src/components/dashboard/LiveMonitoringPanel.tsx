@@ -1,4 +1,3 @@
-import { Activity } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PatientMonitorCard } from "./PatientMonitorCard";
 import { patients } from "@/data/mockData";
@@ -14,30 +13,29 @@ export function LiveMonitoringPanel() {
   });
 
   return (
-    <Card className="col-span-full">
-      <CardHeader className="pb-4">
-        <div className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
-            <Activity className="h-4 w-4 text-primary" />
-          </div>
+    <Card className="elevation-md">
+      <CardHeader className="pb-6 border-b border-border/40">
+        <div className="flex items-center justify-between">
           <div>
-            <CardTitle className="text-lg">Live Monitoring</CardTitle>
-            <p className="text-xs text-muted-foreground">
-              Real-time patient vitals
+            <CardTitle className="text-xl font-semibold">Live Patient Monitoring</CardTitle>
+            <p className="text-sm text-muted-foreground mt-1">
+              Real-time vitals tracking
             </p>
+          </div>
+          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            <span className="flex h-2 w-2 rounded-full bg-primary animate-pulse" />
+            <span>Live</span>
           </div>
         </div>
       </CardHeader>
-      <CardContent>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {sortedPatients.map((patient) => (
-            <PatientMonitorCard
-              key={patient.id}
-              patient={patient}
-              onClick={() => navigate(`/patients/${patient.id}`)}
-            />
-          ))}
-        </div>
+      <CardContent className="pt-6 space-y-3">
+        {sortedPatients.map((patient) => (
+          <PatientMonitorCard
+            key={patient.id}
+            patient={patient}
+            onClick={() => navigate(`/patients/${patient.id}`)}
+          />
+        ))}
       </CardContent>
     </Card>
   );

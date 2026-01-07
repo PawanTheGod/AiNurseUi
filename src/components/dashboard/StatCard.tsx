@@ -5,12 +5,7 @@ import { cn } from "@/lib/utils";
 interface StatCardProps {
   title: string;
   value: string | number;
-  subtitle?: string;
   icon: LucideIcon;
-  trend?: {
-    value: number;
-    isPositive: boolean;
-  };
   variant?: "default" | "critical" | "warning" | "success";
   className?: string;
 }
@@ -18,65 +13,47 @@ interface StatCardProps {
 export function StatCard({
   title,
   value,
-  subtitle,
   icon: Icon,
-  trend,
   variant = "default",
   className,
 }: StatCardProps) {
   const variantStyles = {
-    default: "bg-card",
-    critical: "bg-status-critical/10 border-status-critical/20",
-    warning: "bg-status-warning/10 border-status-warning/20",
-    success: "bg-status-normal/10 border-status-normal/20",
+    default: "bg-gradient-to-br from-card to-card/80",
+    critical: "bg-gradient-to-br from-status-critical/5 to-status-critical/10 border-status-critical/20",
+    warning: "bg-gradient-to-br from-status-warning/5 to-status-warning/10 border-status-warning/20",
+    success: "bg-gradient-to-br from-status-normal/5 to-status-normal/10 border-status-normal/20",
   };
 
   const iconStyles = {
-    default: "bg-primary/10 text-primary",
-    critical: "bg-status-critical/20 text-status-critical",
-    warning: "bg-status-warning/20 text-status-warning",
-    success: "bg-status-normal/20 text-status-normal",
+    default: "text-primary bg-primary/10",
+    critical: "text-status-critical bg-status-critical/10",
+    warning: "text-status-warning bg-status-warning/10",
+    success: "text-status-normal bg-status-normal/10",
   };
 
   return (
-    <Card
+    <Card 
       className={cn(
-        "card-hover border transition-all duration-200",
+        "border elevation-sm card-hover overflow-hidden",
         variantStyles[variant],
-        variant === "critical" && "status-glow-critical",
+        variant === "critical" && "critical-glow",
         className
       )}
     >
-      <CardContent className="p-6">
-        <div className="flex items-start justify-between">
-          <div className="space-y-2">
-            <p className="text-sm font-medium text-muted-foreground">{title}</p>
-            <div className="flex items-baseline gap-2">
-              <p className="text-3xl font-bold tracking-tight">{value}</p>
-              {trend && (
-                <span
-                  className={cn(
-                    "text-sm font-medium",
-                    trend.isPositive ? "text-status-normal" : "text-status-critical"
-                  )}
-                >
-                  {trend.isPositive ? "+" : "-"}
-                  {Math.abs(trend.value)}%
-                </span>
-              )}
-            </div>
-            {subtitle && (
-              <p className="text-xs text-muted-foreground">{subtitle}</p>
-            )}
-          </div>
-          <div
-            className={cn(
-              "flex h-12 w-12 items-center justify-center rounded-lg",
+      <CardContent className="p-8">
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <p className="text-sm font-medium text-muted-foreground tracking-wide uppercase">
+              {title}
+            </p>
+            <div className={cn(
+              "h-10 w-10 rounded-lg flex items-center justify-center transition-transform duration-200 hover:scale-110",
               iconStyles[variant]
-            )}
-          >
-            <Icon className="h-6 w-6" />
+            )}>
+              <Icon className="h-5 w-5" />
+            </div>
           </div>
+          <p className="text-4xl font-bold tracking-tight">{value}</p>
         </div>
       </CardContent>
     </Card>

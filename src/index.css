@@ -147,30 +147,100 @@
   }
 }
 
-/* Custom utilities for healthcare dashboard */
+/* Premium healthcare dashboard utilities */
 @layer utilities {
+
+  /* Subtle pulse animation */
   .animate-pulse-subtle {
-    animation: pulse-subtle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    animation: pulse-subtle 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   }
 
   @keyframes pulse-subtle {
-    0%, 100% {
+
+    0%,
+    100% {
       opacity: 1;
     }
+
     50% {
-      opacity: 0.7;
+      opacity: 0.88;
     }
   }
 
-  .status-glow-critical {
-    box-shadow: 0 0 20px hsl(var(--status-critical) / 0.3);
+  /* Soft fade-in for page transitions */
+  .animate-fade-in {
+    animation: fade-in 0.4s ease-out;
   }
 
-  .status-glow-warning {
-    box-shadow: 0 0 15px hsl(var(--status-warning) / 0.25);
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
+  /* Premium card hover with elevation */
   .card-hover {
-    @apply transition-all duration-200 ease-out hover:shadow-lg hover:-translate-y-0.5;
+    @apply transition-all duration-200 ease-out;
+  }
+
+  .card-hover:hover {
+    @apply -translate-y-0.5 shadow-md;
+  }
+
+  /* Elevation levels */
+  .elevation-sm {
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.03), 0 1px 3px 0 rgb(0 0 0 / 0.04);
+  }
+
+  .elevation-md {
+    box-shadow: 0 2px 4px -1px rgb(0 0 0 / 0.04), 0 4px 6px -1px rgb(0 0 0 / 0.06);
+  }
+
+  .elevation-lg {
+    box-shadow: 0 4px 6px -2px rgb(0 0 0 / 0.05), 0 10px 15px -3px rgb(0 0 0 / 0.08);
+  }
+
+  /* Status indicators with soft backgrounds */
+  .status-indicator {
+    @apply inline-block w-2 h-2 rounded-full;
+  }
+
+  /* Subtle glow for critical alerts */
+  .critical-glow {
+    box-shadow: 0 0 0 1px hsl(var(--status-critical) / 0.1),
+      0 0 12px hsl(var(--status-critical) / 0.08);
+  }
+
+  /* Gentle highlight pulse */
+  .pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse-glow {
+
+    0%,
+    100% {
+      box-shadow: 0 0 0 1px hsl(var(--status-critical) / 0.1),
+        0 0 8px hsl(var(--status-critical) / 0.06);
+    }
+
+    50% {
+      box-shadow: 0 0 0 1px hsl(var(--status-critical) / 0.15),
+        0 0 16px hsl(var(--status-critical) / 0.12);
+    }
+  }
+
+  /* Glass effect for premium cards */
+  .glass-card {
+    background: linear-gradient(to bottom,
+        hsl(var(--card) / 0.8),
+        hsl(var(--card) / 0.95));
+    backdrop-filter: blur(8px);
   }
 }

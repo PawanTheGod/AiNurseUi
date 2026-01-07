@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { ClipboardList, AlertCircle, CheckCircle, ChevronDown, ChevronUp } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { AlertCircle, CheckCircle, ChevronDown, ChevronUp } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
@@ -10,18 +10,18 @@ import { cn } from "@/lib/utils";
 const riskConfig = {
   low: {
     label: "Low Risk",
-    className: "bg-status-normal/10 text-status-normal border-status-normal/20",
-    iconClass: "text-status-normal",
+    className: "bg-status-normal",
+    bgClass: "bg-status-normal/10",
   },
   medium: {
     label: "Medium Risk",
-    className: "bg-status-warning/10 text-status-warning border-status-warning/20",
-    iconClass: "text-status-warning",
+    className: "bg-status-warning",
+    bgClass: "bg-status-warning/10",
   },
   high: {
     label: "High Risk",
-    className: "bg-status-critical/10 text-status-critical border-status-critical/20",
-    iconClass: "text-status-critical",
+    className: "bg-status-critical",
+    bgClass: "bg-status-critical/10",
   },
 };
 
@@ -32,44 +32,46 @@ function InquiryCard({ inquiry }: { inquiry: InquiryResponse }) {
 
   return (
     <Collapsible open={isOpen} onOpenChange={setIsOpen}>
-      <Card
-        className={cn(
-          "transition-all duration-200 card-hover",
-          inquiry.riskLevel === "high" && "border-status-critical/30"
-        )}
-      >
+      <Card className={cn(
+        "border elevation-sm transition-all duration-200",
+        "bg-gradient-to-br from-card to-card/95",
+        isOpen && "elevation-md"
+      )}>
         <CollapsibleTrigger asChild>
-          <CardHeader className="cursor-pointer pb-3">
+          <button className="w-full text-left p-5 cursor-pointer">
             <div className="flex items-start justify-between">
               <div className="flex items-center gap-3">
-                <div
-                  className={cn(
-                    "flex h-10 w-10 items-center justify-center rounded-lg",
-                    inquiry.riskLevel === "high" && "bg-status-critical/20",
-                    inquiry.riskLevel === "medium" && "bg-status-warning/20",
-                    inquiry.riskLevel === "low" && "bg-status-normal/20"
-                  )}
-                >
-                  <ClipboardList className={cn("h-5 w-5", config.iconClass)} />
+                <div className={cn(
+                  "h-10 w-10 rounded-lg flex items-center justify-center shrink-0",
+                  config.bgClass
+                )}>
+                  <span className={cn("status-indicator w-3 h-3", config.className)} />
                 </div>
                 <div>
-                  <CardTitle className="text-base">{inquiry.patientName}</CardTitle>
-                  <p className="text-xs text-muted-foreground">
+                  <h4 className="font-semibold mb-0.5">{inquiry.patientName}</h4>
+                  <p className="text-sm text-muted-foreground">
                     {inquiry.date} • {inquiry.questions.length} questions
                   </p>
                 </div>
               </div>
 
-              <div className="flex items-center gap-2">
-                <Badge variant="outline" className={cn("text-xs", config.className)}>
+              <div className="flex items-center gap-3">
+                <Badge 
+                  variant="secondary" 
+                  className={cn(
+                    "text-xs font-normal px-3 py-1 rounded-full border-0",
+                    config.bgClass
+                  )}
+                >
+                  <span className={cn("status-indicator mr-1.5", config.className)} />
                   {config.label}
                 </Badge>
                 {abnormalCount > 0 && (
-                  <Badge variant="destructive" className="text-xs">
+                  <Badge variant="destructive" className="text-xs px-2 py-1">
                     {abnormalCount} abnormal
                   </Badge>
                 )}
-                <Button variant="ghost" size="icon" className="h-8 w-8">
+                <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0">
                   {isOpen ? (
                     <ChevronUp className="h-4 w-4" />
                   ) : (
@@ -78,31 +80,37 @@ function InquiryCard({ inquiry }: { inquiry: InquiryResponse }) {
                 </Button>
               </div>
             </div>
-          </CardHeader>
+          </button>
         </CollapsibleTrigger>
 
         <CollapsibleContent>
-          <CardContent className="pt-0">
-            <div className="space-y-3 border-t pt-4">
+          <CardContent className="pt-0 pb-5 px-5">
+            <div className="space-y-2 border-t pt-4 border-border/40">
               {inquiry.questions.map((q, index) => (
                 <div
                   key={index}
                   className={cn(
-                    "flex items-start gap-3 rounded-lg p-3",
-                    q.isAbnormal ? "bg-status-critical/5" : "bg-muted/50"
+                    "flex items-start gap-3 p-4 rounded-lg border elevation-sm transition-all duration-200",
+                    "bg-gradient-to-br from-card to-card/95",
+                    q.isAbnormal && "bg-status-critical/5"
                   )}
                 >
-                  {q.isAbnormal ? (
-                    <AlertCircle className="h-4 w-4 mt-0.5 text-status-critical shrink-0" />
-                  ) : (
-                    <CheckCircle className="h-4 w-4 mt-0.5 text-status-normal shrink-0" />
-                  )}
-                  <div>
-                    <p className="text-sm font-medium">{q.question}</p>
+                  <div className={cn(
+                    "h-8 w-8 rounded-lg flex items-center justify-center shrink-0",
+                    q.isAbnormal ? "bg-status-critical/10" : "bg-status-normal/10"
+                  )}>
+                    {q.isAbnormal ? (
+                      <AlertCircle className="h-4 w-4 text-status-critical" />
+                    ) : (
+                      <CheckCircle className="h-4 w-4 text-status-normal" />
+                    )}
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm font-medium mb-1">{q.question}</p>
                     <p
                       className={cn(
                         "text-sm",
-                        q.isAbnormal ? "text-status-critical" : "text-muted-foreground"
+                        q.isAbnormal ? "text-status-critical font-medium" : "text-muted-foreground"
                       )}
                     >
                       {q.answer}
@@ -128,22 +136,27 @@ export default function Inquiry() {
   const highRiskCount = sortedInquiries.filter((i) => i.riskLevel === "high").length;
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-8 animate-fade-in">
+      {/* Header */}
       <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">AI Health Inquiry</h1>
+        <div className="space-y-1">
+          <h1 className="text-3xl font-semibold tracking-tight">AI Health Inquiry</h1>
           <p className="text-muted-foreground">
             Daily patient health check responses analyzed by AI
           </p>
         </div>
         {highRiskCount > 0 && (
-          <Badge variant="destructive" className="text-sm">
+          <Badge 
+            variant="destructive" 
+            className="text-sm px-4 py-2"
+          >
             {highRiskCount} high risk
           </Badge>
         )}
       </div>
 
-      <div className="space-y-4">
+      {/* Inquiry List */}
+      <div className="space-y-3">
         {sortedInquiries.map((inquiry) => (
           <InquiryCard key={inquiry.id} inquiry={inquiry} />
         ))}

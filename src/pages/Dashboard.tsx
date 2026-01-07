@@ -9,41 +9,31 @@ export default function Dashboard() {
   ).length;
 
   return (
-    <div className="space-y-6 animate-fade-in">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight">Dashboard</h1>
+    <div className="space-y-10 animate-fade-in">
+      {/* Header */}
+      <div className="space-y-1">
+        <h1 className="text-3xl font-semibold tracking-tight">Dashboard</h1>
         <p className="text-muted-foreground">
-          Welcome back, Dr. Smith. Here's your patient overview.
+          Welcome back, Dr. Smith
         </p>
       </div>
 
-      {/* Stats Grid */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {/* Core Metrics - Only 3 cards */}
+      <div className="grid gap-6 md:grid-cols-3">
         <StatCard
           title="Total Patients"
           value={dashboardStats.totalPatients}
-          subtitle="Active in system"
           icon={Users}
-          trend={{ value: 12, isPositive: true }}
         />
         <StatCard
           title="Critical Alerts"
           value={criticalAlerts}
-          subtitle="Require immediate attention"
           icon={AlertTriangle}
           variant="critical"
         />
         <StatCard
-          title="Active Cases"
-          value={dashboardStats.activeCases}
-          subtitle="Under monitoring"
-          icon={Activity}
-          trend={{ value: 5, isPositive: false }}
-        />
-        <StatCard
           title="AI System Status"
           value={dashboardStats.aiSystemStatus}
-          subtitle={`${dashboardStats.systemHealth}% health`}
           icon={Cpu}
           variant="success"
         />
